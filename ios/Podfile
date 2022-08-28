@@ -1,0 +1,93 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '9.0'
+
+abstract_target 'KimAn' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  # use_frameworks!
+
+  # Pods for KimAn
+
+
+end
+
+
+
+target 'ThamDinh' do
+  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
+  # use_frameworks!
+
+  # Pods for ThamDinh
+
+
+# Pods for KimAnApp
+  rn_path = '../node_modules/react-native'
+  rn_maps_path = '../node_modules/react-native-maps'
+
+ pod 'yoga', path: "#{rn_path}/ReactCommon/yoga/yoga.podspec"
+  pod 'React', path: rn_path, subspecs: [
+    'Core',
+    'CxxBridge',
+    'DevSupport',
+    'RCTActionSheet',
+    'RCTAnimation',
+    'RCTGeolocation',
+    'RCTImage',
+    'RCTLinkingIOS',
+    'RCTNetwork',
+    'RCTSettings',
+    'RCTText',
+    'RCTVibration',
+    'RCTWebSocket',
+  ]
+
+pod 'DoubleConversion', :podspec => "#{rn_path}/third-party-podspecs/DoubleConversion.podspec"
+pod 'glog', :podspec => "#{rn_path}/third-party-podspecs/glog.podspec"
+pod 'Folly', :podspec => "#{rn_path}/third-party-podspecs/Folly.podspec"
+pod 'react-native-maps', path: rn_maps_path
+pod 'react-native-google-maps', :path => '../node_modules/react-native-maps'
+pod 'react-native-camera', path: '../node_modules/react-native-camera'
+pod 'react-native-shimmer', :path => '../node_modules/react-native-shimmer'
+pod 'react-native-fast-image', :path => '../node_modules/react-native-fast-image'
+pod 'RNFS', :path => '../node_modules/react-native-fs'
+pod 'RNImageCropPicker', :path => '../node_modules/react-native-image-crop-picker'
+pod 'react-native-image-resizer', :path => '../node_modules/react-native-image-resizer'
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    if target.name == 'react-native-google-maps'
+      target.build_configurations.each do |config|
+        config.build_settings['CLANG_ENABLE_MODULES'] = 'No'
+      end
+    end
+    if target.name == "React"
+      target.remove_from_project
+    end
+  end
+    find_and_replace("../node_modules/react-native/React/CxxBridge/RCTCxxBridge.mm",
+    "_initializeModules:(NSArray<id<RCTBridgeModule>> *)modules", "_initializeModules:(NSArray<Class> *)modules")
+    find_and_replace("../node_modules/react-native/ReactCommon/turbomodule/core/platform/ios/RCTTurboModuleManager.mm",
+    "RCTBridgeModuleNameForClass(strongModule))", "RCTBridgeModuleNameForClass(Class(strongModule)))")
+end
+end
+
+
+react_project = Xcodeproj::Project.open("../node_modules/react-native/React/React.xcodeproj")
+    react_project.main_group["React/Views"].files.each do |file|   
+      if file.path.match(/^RCTWebView/) 
+        file.remove_from_project
+      end   
+    end   
+react_project.save
+
+def find_and_replace(dir, findstr, replacestr)
+  Dir[dir].each do |name|
+      text = File.read(name)
+      replace = text.gsub(findstr,replacestr)
+      if text != replace
+          puts "Fix: " + name
+          File.open(name, "w") { |file| file.puts replace }
+          STDOUT.flush
+      end
+  end
+  Dir[dir + '*/'].each(&method(:find_and_replace))
+end

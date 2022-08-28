@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../KimAnThamDinh.iml" filepath="$PROJECT_DIR$/../KimAnThamDinh.iml" group="KimAnThamDinh" />
+      <module fileurl="file://$PROJECT_DIR$/../../src/core/components/react-native-audio/android/react-native-audio.iml" filepath="$PROJECT_DIR$/../../src/core/components/react-native-audio/android/react-native-audio.iml" group="KimAnThamDinh/react-native-audio" />
+      <module fileurl="file://$PROJECT_DIR$/../../node_modules/react-native-bluetooth-serial-next/android/react-native-bluetooth-serial-next.iml" filepath="$PROJECT_DIR$/../../node_modules/react-native-bluetooth-serial-next/android/react-native-bluetooth-serial-next.iml" group="KimAnThamDinh/react-native-bluetooth-serial-next" />
+      <module fileurl="file://$PROJECT_DIR$/../../node_modules/react-native-image-crop-picker/android/react-native-image-crop-picker.iml" filepath="$PROJECT_DIR$/../../node_modules/react-native-image-crop-picker/android/react-native-image-crop-picker.iml" group="KimAnThamDinh/react-native-image-crop-picker" />
+      <module fileurl="file://$PROJECT_DIR$/../../node_modules/react-native-push-notification/android/react-native-push-notification.iml" filepath="$PROJECT_DIR$/../../node_modules/react-native-push-notification/android/react-native-push-notification.iml" group="KimAnThamDinh/react-native-push-notification" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/thamdinh.iml" filepath="$PROJECT_DIR$/.idea/thamdinh.iml" group="KimAnThamDinh/thamdinh" />
+    </modules>
+  </component>
+</project>

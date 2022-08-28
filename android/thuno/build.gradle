@@ -1,0 +1,178 @@
+apply plugin: "com.android.application"
+
+
+import com.android.build.OutputFile
+
+project.ext.react = [
+        entryFile: "src/apps/thuno/index.js"
+]
+
+project.ext.vectoricons = [
+        iconFontNames: ['MaterialIcons.ttf', 'EvilIcons.ttf', 'Feather.ttf', 'FontAwesome.ttf', 'Foundation.ttf', 'Ionicons.ttf'] // Name of the font files you want to copy
+]
+
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+apply from: "../../node_modules/react-native/react.gradle"
+//apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
+
+/**
+ * Set this to true to create two separate APKs instead of one:
+ *   - An APK that only works on ARM devices
+ *   - An APK that only works on x86 devices
+ * The advantage is the size of the APK is reduced by about 4MB.
+ * Upload all the APKs to the Play Store and people will download
+ * the correct one based on the CPU architecture of their device.
+ */
+def enableSeparateBuildPerCPUArchitecture = false
+
+/**
+ * Run Proguard to shrink the Java bytecode in release builds.
+ */
+def enableProguardInReleaseBuilds = false
+
+String VERSION_CODE = (new Date()).format('yyyyMMddHH')
+String VERSION_NAME = "1.0.0"
+String APK_NAME = "Employee"
+
+// Init and load keystore info
+def keystorePropertiesFile = rootProject.file("keystores/debug.keystore.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'key0'
+            keyPassword 'kiman2201'
+            storeFile file('keystores/kiman.jks')
+            storePassword 'kiman2201'
+        }
+    }
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion '28.0.3'
+    defaultConfig {
+        applicationId "com.kiman.thuno"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 3
+        versionName "1.0"
+        ndk {
+            abiFilters "armeabi-v7a", "x86"
+        }
+        multiDexEnabled true
+    }
+    signingConfigs {
+        debug {
+            storeFile file(keystoreProperties['key.store'])
+            keyAlias keystoreProperties['key.alias']
+            keyPassword keystoreProperties['key.alias.password']
+            storePassword keystoreProperties['key.store.password']
+        }
+        release {
+            storeFile file(keystoreProperties['key.store'])
+            keyAlias keystoreProperties['key.alias']
+            keyPassword keystoreProperties['key.alias.password']
+            storePassword keystoreProperties['key.store.password']
+        }
+    }
+    splits {
+        abi {
+            reset()
+            enable enableSeparateBuildPerCPUArchitecture
+            universalApk false  // If true, also generate a universal APK
+            include "armeabi-v7a", "x86"
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.config
+        }
+        debug {
+            signingConfig signingConfigs.config
+        }
+    }
+    flavorDimensions "default"
+    productFlavors {
+        dev {
+            applicationId "com.kiman.thuno"
+        }
+        staging {
+            applicationId "com.kiman.thuno"
+        }
+        demo {
+            applicationId "com.kiman.thuno"
+        }
+        pro {
+            applicationId "com.kiman.thuno"
+        }
+        flavor {
+        }
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = outputFileName.replace(outputFileName, VERSION_CODE + "_" + VERSION_NAME + "_"
+                    + variant.getName() + "_" + APK_NAME + ".apk")
+        }
+    }
+    // applicationVariants are e.g. debug, release
+//    applicationVariants.all { variant ->
+//        variant.outputs.each { output ->
+//            // For each separate APK per architecture, set a unique version code as described here:
+//            // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
+//            def versionCodes = ["armeabi-v7a":1, "x86":2]
+//            def abi = output.getFilter(OutputFile.ABI)
+//            if (abi != null) {  // null for the universal-debug, universal-release variants
+//                output.versionCodeOverride =
+//                        versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
+//            }
+//        }
+//    }
+}
+
+dependencies {
+    implementation project(':react-native-gesture-handler')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    implementation 'com.facebook.react:react-native:+'
+    // From node_modules
+    implementation project(':react-native-vector-icons')
+
+    implementation project(':react-native-push-notification')
+
+
+    compile project(':react-native-bluetooth-serial-next')
+
+    implementation(project(':react-native-maps')){
+        exclude group: 'com.google.android.gms', module: 'play-services-base'
+        exclude group: 'com.google.android.gms', module: 'play-services-maps'
+    }
+    compile 'com.google.android.gms:play-services-base:11.8.0'
+
+    compile "com.google.android.gms:play-services-analytics:11.8.0"
+    compile "com.google.android.gms:play-services-gcm:11.8.0"
+
+    compile ("com.google.android.gms:play-services-maps:+") {
+        force = true;
+    }
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation project(':react-native-audio')
+    implementation project(':react-native-sound')
+    compile project(':react-native-image-picker')
+    compile 'com.android.support:multidex:1.0.0'
+    implementation project(':react-native-shimmer')
+    compile project(':@mauron85_react-native-background-geolocation')
+    implementation project(':react-native-geolocation-service')
+//    compile project(':react-native-code-push')
+}
+
+// Run this once to be able to run the application with BUCK
+// puts all compile dependencies into folder libs for BUCK to use
+task copyDownloadableDepsToLibs(type: Copy) {
+    from configurations.compile
+    into 'libs'
+}
+
+apply plugin: 'com.google.gms.google-services'

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "159933351089",
+    "firebase_url": "https://kimanthamdinh.firebaseio.com",
+    "project_id": "kimanthamdinh",
+    "storage_bucket": "kimanthamdinh.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159933351089:android:ba2deef4ad9ecfa1",
+        "android_client_info": {
+          "package_name": "com.kiman.thamdinh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "159933351089-0nf7mehi9phemi3fugjkqvr82ahiofij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnh285JdjxIEH87IBME1RtrHpe9pVDxq4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "159933351089-0nf7mehi9phemi3fugjkqvr82ahiofij.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
